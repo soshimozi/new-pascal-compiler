@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Intermediate\Type\" />
-    <Folder Include="Intermediate\IntermediateCode\" />
-    <Folder Include="Intermediate\IntermediateCode\Interface\" />
-    <Folder Include="Intermediate\SymbolTable\" />
     <Folder Include="Intermediate\SymbolTable\Interface\" />
     <Folder Include="Intermediate\Type\Interface\" />
   </ItemGroup>

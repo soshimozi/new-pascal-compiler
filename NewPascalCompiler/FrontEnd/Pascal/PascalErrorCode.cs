@@ -8,24 +8,32 @@ namespace NewPascalCompiler.FrontEnd.Pascal
 {
     public class PascalErrorCode
     {
-        public static readonly PascalErrorCode UnexpectedEOF = new(30, "Unexpected end of file");
-        public static readonly PascalErrorCode UnexpectedToken = new(31, "Unexpected token");
-        public static readonly PascalErrorCode MissingBegin = new(32, "Missing BEGIN");
-        public static readonly PascalErrorCode InvalidCharacter = new(33, "Invalid character");
-        public static readonly PascalErrorCode InvalidNumber = new(34, "Invalid number");
-        public static readonly PascalErrorCode RangeInteger = new(35, "Integer literal out of range");
-        public static readonly PascalErrorCode RangeReal = new(36, "Real literal out of range");
+        public static readonly PascalErrorCode UnexpectedEOF = new("Unexpected end of file");
+        public static readonly PascalErrorCode UnexpectedToken = new("Unexpected token");
+        public static readonly PascalErrorCode MissingBegin = new("Missing BEGIN");
+        public static readonly PascalErrorCode InvalidCharacter = new("Invalid character");
+        public static readonly PascalErrorCode InvalidNumber = new("Invalid number");
+        public static readonly PascalErrorCode RangeInteger = new("Integer literal out of range");
+        public static readonly PascalErrorCode RangeReal = new("Real literal out of range");
+        public static readonly PascalErrorCode MissingPeriod = new("Missing .");
+        public static readonly PascalErrorCode AlreadyForwarded = new("Already forwarded");
+        public static readonly PascalErrorCode MissingSemicolon = new("Missing semi-colon");
 
-        private readonly int _index;
+        //private readonly int _index;
         private readonly string _message;
 
-        private PascalErrorCode(int index, string message)
+        private PascalErrorCode(string message)
         {
-            _index = index;
+            //_index = index;
             _message = message;
         }
 
-        public static implicit operator int(PascalErrorCode pe) => pe._index;
+        public override string ToString()
+        {
+            return this;
+        }
+
+        //public static implicit operator int(PascalErrorCode pe) => pe._index;
         public static implicit operator string(PascalErrorCode pe) => pe._message;
     }
 }

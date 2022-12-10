@@ -1,5 +1,4 @@
 ﻿using System;
-using ZoeyDesktopNavigationParser.FrontEnd.Pascal;
 
 namespace NewPascalCompiler.Intermediate.Type
 {

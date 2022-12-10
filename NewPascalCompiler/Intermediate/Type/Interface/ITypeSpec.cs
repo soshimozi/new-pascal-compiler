@@ -5,8 +5,8 @@ namespace NewPascalCompiler.Intermediate.Type.Interface
 {
     public interface ITypeSpec
     {
-        TypeForm Form { get; }
-        ISymbolTableEntry Identifier { get; set; }
+        TypeForm? Form { get; }
+        ISymbolTableEntry? Identifier { get; set; }
         object? this[TypeKey key]
         {
             get;
@@ -20,7 +20,7 @@ namespace NewPascalCompiler.Intermediate.Type.Interface
 
         bool IsPascalString { get; }
 
-        ITypeSpec BaseType { get; }
+        ITypeSpec? BaseType { get; }
 
     }
 }

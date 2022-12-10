@@ -2,7 +2,7 @@
 
 public class Token
 {
-    protected TokenType TokenType;
+    //protected TokenType TokenType;
     protected string? Text;
     protected object? Value;
     protected Source Source;
@@ -26,9 +26,10 @@ public class Token
         NextChar();
     }
 
-    public TokenType GetTokenType()
+    public TokenType TokenType
     {
-        return TokenType;
+        get;
+        protected set;
     }
 
     public string? GetText()

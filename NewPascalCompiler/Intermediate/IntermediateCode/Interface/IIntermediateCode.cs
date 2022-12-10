@@ -8,7 +8,6 @@ namespace NewPascalCompiler.Intermediate.IntermediateCode.Interface;
 
 public interface IIntermediateCode
 {
-    IntermediateCodeType CodeType { get; }
-    IIntermediateCode Parent { get; }
+    IIntermediateCodeNode? Root { get; set; }
 
 }

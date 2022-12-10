@@ -1,5 +1,4 @@
 ﻿using NewPascalCompiler.FrontEnd.Pascal.Tokens;
-using ZoeyDesktopNavigationParser.FrontEnd.Pascal.Tokens;
 
 namespace NewPascalCompiler.FrontEnd.Pascal;
 

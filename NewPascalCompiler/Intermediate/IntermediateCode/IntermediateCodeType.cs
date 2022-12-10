@@ -5,28 +5,28 @@ namespace NewPascalCompiler.Intermediate.IntermediateCode
     public enum IntermediateCodeType
     {
         // Program structure
-        PROGRAM, PROCEDURE, FUNCTION,
+        Program, Procedure, Function,
 
         // Statements
-        COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS,
-        IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
+        Compound, Assign, Loop, Test, Call, Parameters,
+        If, Select, SelectBranch, SelectConstants, NoOp,
 
         // Relational operators
-        EQ, NE, LT, LE, GT, GE, NOT,
+        Eq, Ne, Lt, Le, Gt, Ge, Not,
 
         // Additive operators
-        ADD, SUBTRACT, OR, NEGATE,
+        Add, Subtract, Or, Negate,
 
         // Multiplicative operators
-        MULTIPLY, INTEGER_DIVIDE, FLOAT_DIVIDE, MOD, AND,
+        Multiply , IntegerDivide, FloatDivide, Mod, And,
 
         // Operands
-        VARIABLE, SUBSCRIPTS, FIELD,
-        INTEGER_CONSTANT, REAL_CONSTANT,
-        STRING_CONSTANT, BOOLEAN_CONSTANT,
+        Variable, Subscripts, Field,
+        IntegerConstant, RealConstant,
+        StringConstant, BooleanConstant,
 
         // WRITE parameter
-        WRITE_PARM,
+        WriteParam,
     }
 }
 

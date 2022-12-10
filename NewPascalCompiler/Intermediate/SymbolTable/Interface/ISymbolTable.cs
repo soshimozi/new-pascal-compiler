@@ -7,9 +7,9 @@ namespace NewPascalCompiler.Intermediate.SymbolTable.Interface
         int NestingLevel { get; }
 
         ISymbolTableEntry Enter(string name);
-        ISymbolTableEntry Lookup(string name);
-        List<int> SortedEntries { get; }
-        int NextSlotNumber { get; }
+        ISymbolTableEntry? Lookup(string name);
+        List<ISymbolTableEntry> SortedEntries { get; }
+        int GetNextSlotNumber();
         int MaxSlotNumber { get; }
     }
 }

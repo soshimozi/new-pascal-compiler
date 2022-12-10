@@ -4,7 +4,7 @@ namespace NewPascalCompiler.Intermediate.SymbolTable.Interface
 {
     public interface ISymbolTableStack
     {
-        ISymbolTableEntry ProgramId
+        ISymbolTableEntry? ProgramId
         {
             get;
             set;
@@ -16,12 +16,13 @@ namespace NewPascalCompiler.Intermediate.SymbolTable.Interface
         }
 
         ISymbolTable LocalSymbolTable { get; }
+        public ISymbolTable Push();
         ISymbolTable Push(ISymbolTable symbolTable);
         ISymbolTable Pop();
 
-        ISymbolTableEntry EnterLocal(string name);
-        ISymbolTableEntry LookupLocal(string name);
-        ISymbolTableEntry Lookup(string name);
+        ISymbolTableEntry? EnterLocal(string name);
+        ISymbolTableEntry? LookupLocal(string name);
+        ISymbolTableEntry? Lookup(string name);
     }
 }
 

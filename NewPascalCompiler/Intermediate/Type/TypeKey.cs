@@ -4,16 +4,16 @@ namespace NewPascalCompiler.Intermediate.Type
 {
     public enum TypeKey
     {
-        ENUMERATION_CONSTANTS,
+        EnumerationConstants,
 
         // Subrange
-        SUBRANGE_BASE_TYPE, SUBRANGE_MIN_VALUE, SUBRANGE_MAX_VALUE,
+        SubrangeBaseType, SubrangeMinValue, SubrangeMaxValue,
 
         // Array
-        ARRAY_INDEX_TYPE, ARRAY_ELEMENT_TYPE, ARRAY_ELEMENT_COUNT,
+        ArrayIndexType, ArrayElementType, ArrayElementCount,
 
         // Record
-        RECORD_SYMTAB
+        RecordSymbolTable
     }
 }
 

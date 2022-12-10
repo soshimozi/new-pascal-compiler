@@ -9,4 +9,5 @@ namespace NewPascalCompiler.Intermediate.IntermediateCode;
 
 public class IntermediateCode : IIntermediateCode
 {
+    public IIntermediateCodeNode? Root { get; set; }
 }

@@ -1,10 +1,8 @@
-﻿using ZoeyDesktopNavigationParser.FrontEnd.Pascal.Tokens;
-
-namespace NewPascalCompiler.FrontEnd;
+﻿namespace NewPascalCompiler.FrontEnd;
 
 public abstract class Scanner
 {
-    protected Source Source;
+    protected readonly Source Source;
     private Token? _currentToken;
 
     protected Scanner(Source source)
@@ -12,7 +10,7 @@ public abstract class Scanner
         Source = source;
     }
 
-    public Token CurrentToken => _currentToken;
+    public Token? CurrentToken => _currentToken;
 
     public Token NextToken()
     {
@@ -22,12 +20,12 @@ public abstract class Scanner
 
     protected abstract Token ExtractToken();
 
-    public char CurrentChar()
+    protected char CurrentChar()
     {
         return Source.CurrentChar();
     }
 
-    public char NextChar()
+    protected char NextChar()
     {
         return Source.NextChar();
     }

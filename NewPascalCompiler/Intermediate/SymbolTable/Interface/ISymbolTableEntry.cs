@@ -7,12 +7,10 @@ namespace NewPascalCompiler.Intermediate.SymbolTable.Interface
     {
         string Name { get; }
         ISymbolTable SymbolTable { get; }
-        Definition Definition { get; set; }
-        ITypeSpec TypeSpec { get; set; }
-        void AppendLineNumber(int lineNunber);
+        Definition? Definition { get; set; }
+        ITypeSpec? TypeSpec { get; set; }
+        void AppendLineNumber(int lineNumber);
         List<int> GetLineNumbers();
-        //void SetAttribute(SymbolTableKey key, object? value);
-        //object? GetAttribute(SymbolTableKey key);
         object? this[SymbolTableKey key]
         {
             get;

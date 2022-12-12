@@ -67,7 +67,7 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
             {
                 var routineParser =
                     new DeclaredRoutineParser(this);
-                routineParser.Parse(token, parentId);
+                routineParser.Parse(parentId, ref token);
 
                 // Look for one or more semicolons after a definition.
                 token = CurrentToken;

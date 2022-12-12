@@ -18,7 +18,7 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
         {
         }
 
-        public ISymbolTableEntry? Parse(Token token, ISymbolTableEntry? parentId)
+        public ISymbolTableEntry? Parse(ISymbolTableEntry? parentId, ref Token token)
         {
             Definition? routineDefn = null;
             string? dummyName = null;
@@ -30,37 +30,37 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
             {
 
                 case TokenType.Program:
-                {
-                    token = GetNextToken();  // consume PROGRAM
-                    routineDefn = Definition.Program;
-                    dummyName = "DummyProgramName".ToLower();
-                    break;
-                }
+                    {
+                        token = GetNextToken();  // consume PROGRAM
+                        routineDefn = Definition.Program;
+                        dummyName = "DummyProgramName".ToLower();
+                        break;
+                    }
 
                 case TokenType.Procedure:
-                {
-                    token = GetNextToken();  // consume PROCEDURE
-                    routineDefn = Definition.Procedure;
-                    dummyName = "DummyProcedureName_".ToLower() +
-                                string.Format("%03d", ++dummyCounter);
-                    break;
-                }
+                    {
+                        token = GetNextToken();  // consume PROCEDURE
+                        routineDefn = Definition.Procedure;
+                        dummyName = "DummyProcedureName_".ToLower() +
+                                    string.Format("%03d", ++dummyCounter);
+                        break;
+                    }
 
                 case TokenType.Function:
-                {
-                    token = GetNextToken();  // consume FUNCTION
-                    routineDefn = Definition.Function;
-                    dummyName = "DummyFunctionName_".ToLower() +
-                                string.Format("%03d", ++dummyCounter);
-                    break;
-                }
+                    {
+                        token = GetNextToken();  // consume FUNCTION
+                        routineDefn = Definition.Function;
+                        dummyName = "DummyFunctionName_".ToLower() +
+                                    string.Format("%03d", ++dummyCounter);
+                        break;
+                    }
 
                 default:
-                {
-                    routineDefn = Definition.Program;
-                    dummyName = "DummyProgramName".ToLower();
-                    break;
-                }
+                    {
+                        routineDefn = Definition.Program;
+                        dummyName = "DummyProgramName".ToLower();
+                        break;
+                    }
             }
 
             // Parse the routine name.
@@ -77,7 +77,7 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
 
             routineId[SymbolTableKey.ROUTINE_ROUTINES] = new List<ISymbolTableEntry>();
 
-            var routineCode = (RoutineCode ?)routineId[SymbolTableKey.ROUTINE_CODE];
+            var routineCode = (RoutineCode?)routineId[SymbolTableKey.ROUTINE_CODE];
 
             // Push the routine's new symbol table onto the stack.
             // If it was forwarded, push its existing symbol table.
@@ -118,14 +118,14 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
                 if (token.TokenType != TokenType.SemiColon)
                 {
                     HandleSyntaxError(token, PascalErrorCode.AlreadyForwarded);
-                    ParseHeader(token, routineId);
+                    ParseHeader(ref token, routineId);
                 }
             }
 
             // Parse the routine's formal parameters and function return type.
             else
             {
-                ParseHeader(token, routineId);
+                ParseHeader(ref token, routineId);
             }
 
             // Look for the semicolon.
@@ -164,16 +164,189 @@ namespace NewPascalCompiler.FrontEnd.Pascal.Parsers
             return routineId;
         }
 
-        protected ISymbolTableEntry? ParseRoutineName(Token token, string? procedureName)
+        protected ISymbolTableEntry? ParseRoutineName(Token token, string? dummyName)
+        {
+            ISymbolTableEntry? routineId = null;
+
+            // Parse the routine name identifier
+            if (token.TokenType == TokenType.Identifier)
+            {
+                string tokenText = token.GetText() ?? string.Empty;
+                if (string.IsNullOrEmpty(tokenText))
+                {
+                    HandleSyntaxError(token, PascalErrorCode.MissingIdentifier);
+                    return null;
+                }
+
+                routineId = SymbolTableStack.LookupLocal(tokenText);
+
+                if (routineId == null)
+                {
+                    routineId = SymbolTableStack.EnterLocal(tokenText);
+                }
+                else
+                {
+                    var routineIdObject = routineId[SymbolTableKey.ROUTINE_CODE];
+                    if (routineIdObject != null)
+                    {
+                        var routineCode = (RoutineCode)routineIdObject;
+
+                        if (routineCode != RoutineCode.Forward)
+                        {
+                            HandleSyntaxError(token, PascalErrorCode.IdentifierRedefined);
+                            routineId = null;
+                        }
+                    }
+                }
+
+                token = GetNextToken();
+
+            }
+            else
+            {
+                HandleSyntaxError(token, PascalErrorCode.MissingIdentifier);
+            }
+
+            // if necessary, create a dummy routine name symbol table entry
+            if (routineId == null)
+            {
+                routineId = SymbolTableStack.EnterLocal(dummyName ?? string.Empty);
+            }
+            return routineId;
+        }
+
+        private void ParseHeader(ref Token token, ISymbolTableEntry routineId)
+        {
+            // Parse the routine's formal parameters.
+            ParseFormalParameters(ref token, routineId);
+            token = CurrentToken;
+
+            if(routineId.Definition == Definition.Function)
+            {
+                var variableDelcarationsParser = new VariableDeclarationsParser(this);
+
+                variableDelcarationsParser.Definitition = Definition.Function;
+            }
+            /*
+             *         // Parse the routine's formal parameters.
+        parseFormalParameters(token, routineId);
+        token = currentToken();
+
+        // If this is a function, parse and set its return type.
+        if (routineId.getDefinition() == DefinitionImpl.FUNCTION) {
+            VariableDeclarationsParser variableDeclarationsParser =
+                new VariableDeclarationsParser(this);
+            variableDeclarationsParser.setDefinition(DefinitionImpl.FUNCTION);
+            TypeSpec type = variableDeclarationsParser.parseTypeSpec(token);
+
+            token = currentToken();
+
+            // The return type cannot be an array or record.
+            if (type != null) {
+                TypeForm form = type.getForm();
+                if ((form == TypeFormImpl.ARRAY) ||
+                    (form == TypeFormImpl.RECORD))
+                {
+                    errorHandler.flag(token, INVALID_TYPE, this);
+                }
+            }
+
+            // Missing return type.
+            else {
+                type = Predefined.undefinedType;
+            }
+
+            routineId.setTypeSpec(type);
+            token = currentToken();
+        }
+             * 
+             */
+        }
+
+
+
+        private static readonly HashSet<TokenType> ParameterSet = new()
+        {
+            TokenType.Const,
+            TokenType.Type,
+            TokenType.Var,
+            TokenType.Procedure,
+            TokenType.Function,
+            TokenType.Begin,
+            TokenType.Var,
+            TokenType.Identifier,
+            TokenType.RightParen
+        };
+
+        // Synchronization set for the opening left parenthesis.
+        private static readonly HashSet<TokenType> LeftParenSet = new()
+        {
+            TokenType.Const,
+            TokenType.Type,
+            TokenType.Var,
+            TokenType.Procedure,
+            TokenType.Function,
+            TokenType.Begin,
+            TokenType.LeftParen,
+            TokenType.SemiColon,
+            TokenType.Colon
+        };
+
+
+        // Synchronization set for the closing right parenthesis.
+        private static readonly HashSet<TokenType> RightParenSet = new()
+        {
+            TokenType.Const,
+            TokenType.Type,
+            TokenType.Var,
+            TokenType.Procedure,
+            TokenType.Function,
+            TokenType.Begin,
+            TokenType.RightParen,
+            TokenType.SemiColon,
+            TokenType.Colon
+        };
+
+        private void ParseFormalParameters(ref Token token, ISymbolTableEntry routineId)
         {
             throw new NotImplementedException();
         }
 
-        private void ParseHeader(Token token, ISymbolTableEntry routineId)
+        // Synchronization set to follow a formal parameter identifier.
+        private static readonly HashSet<TokenType> ParameterFollowSet = new()
         {
+            TokenType.Colon,
+            TokenType.RightParen,
+            TokenType.SemiColon,
+            TokenType.Const,
+            TokenType.Type,
+            TokenType.Var,
+            TokenType.Procedure,
+            TokenType.Function,
+            TokenType.Begin
+        };
 
+        // Synchronization set for the , token.
+        private static readonly HashSet<TokenType> CommaSet = new()
+        {
+            TokenType.Comma,
+            TokenType.Colon,
+            TokenType.Identifier,
+            TokenType.RightParen,
+            TokenType.SemiColon,
+            TokenType.Const,
+            TokenType.Type,
+            TokenType.Var,
+            TokenType.Procedure,
+            TokenType.Function,
+            TokenType.Begin
+        };
+
+        private List<ISymbolTableEntry> ParseParmSublist(ref Token token,
+                                                        ISymbolTableEntry routineId)
+        {
+            return new List<ISymbolTableEntry>();
         }
-
 
     }
 }

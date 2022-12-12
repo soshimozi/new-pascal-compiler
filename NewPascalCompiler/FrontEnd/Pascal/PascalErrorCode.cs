@@ -18,6 +18,8 @@ namespace NewPascalCompiler.FrontEnd.Pascal
         public static readonly PascalErrorCode MissingPeriod = new("Missing .");
         public static readonly PascalErrorCode AlreadyForwarded = new("Already forwarded");
         public static readonly PascalErrorCode MissingSemicolon = new("Missing semi-colon");
+        public static readonly PascalErrorCode MissingIdentifier = new("Missing identifier");
+        public static readonly PascalErrorCode IdentifierRedefined = new("Identifier was redefined.");
 
         //private readonly int _index;
         private readonly string _message;
